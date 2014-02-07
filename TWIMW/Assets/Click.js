@@ -10,7 +10,7 @@ function Start () {
 
 }
 
-
+// Test sync
 function Update () {
 	if (Input.GetMouseButtonDown(0)){ // if left button pressed...
     	// create a ray passing through the mouse pointer:
