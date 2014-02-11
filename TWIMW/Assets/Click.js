@@ -24,11 +24,14 @@ function Update () {
       		// selected item, do it here,
       		// then select the new one:
       		
-      		ChangeTurn();
       		
       		selected = hit.transform;
       		
-      		selected.GetComponent(CountryScript).ChangePlayer(player);
+      		if (selected.gameObject.tag == "Button") {
+      			ChangeTurn();
+      		} else {
+      			selected.GetComponent(CountryScript).ChangePlayer(player);
+      		}
       		/*
       		if (player.tag == "Red"){
       			//color = Color.red;
