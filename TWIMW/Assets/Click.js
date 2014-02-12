@@ -1,6 +1,7 @@
 ﻿#pragma strict
 
 var selected: Transform;
+var prev: Transform;
 var cam: Camera;
 var player: GameObject;
 var player1: GameObject;
@@ -8,9 +9,10 @@ var player2: GameObject;
 var player3: GameObject;
 var player4: GameObject;
 var player5: GameObject;
+var map: Transform;
 
 function Start () {
-
+	
 }
 
 // Test sync
@@ -25,12 +27,24 @@ function Update () {
       		// then select the new one:
       		
       		
+      		prev = selected;
       		selected = hit.transform;
       		
       		if (selected.gameObject.tag == "Button") {
       			ChangeTurn();
       		} else {
-      			selected.GetComponent(CountryScript).ChangePlayer(player);
+      			if (selected.GetComponent(CountryScript).player == player) {
+      				
+      			} else {
+      				if (prev.GetComponent(CountryScript).player == player) {
+      					for (var neighbor in prev.GetComponent(CountryScript).neighbors) {
+      						if (selected.gameObject == neighbor && prev.GetComponent(CountryScript).Attack(selected)) {
+      							selected.GetComponent(CountryScript).ChangePlayer(player);
+      						}
+      					}
+      				} else {
+      				}
+      			}
       		}
       		/*
       		if (player.tag == "Red"){
@@ -89,5 +103,18 @@ function ChangeTurn () {
 		player = player5;
 	} else {
 		player = player1;
+	}
+	for (var country: GameObject in player.GetComponent(PlayerScript).countries) {
+		++country.GetComponent(CountryScript).armyCount;
+	}
+}
+
+function OnGUI () {
+	//var allCountries = map.GetComponentsInChildren(Transform);
+	for (var country : Transform in map) {
+		var rend: Renderer = country.gameObject.renderer;
+		//var pos : Vector3 = cam.WorldToScreenPoint(country.position);
+		if (GUI.Button (Rect (rend.bounds.center.x * country.localScale.x + Screen.width/2, Screen.height/2 - rend.bounds.center.y * country.localScale.y, 32, 32), country.GetComponent(CountryScript).armyCount.ToString()))
+			print (country.name + " has " + country.GetComponent(CountryScript).armyCount.ToString() + " soldiers in it.");
 	}
 }
